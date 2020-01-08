@@ -1,2 +1,2 @@
-# testCypress
+# Test Cypress
 Testing of Cypress.
