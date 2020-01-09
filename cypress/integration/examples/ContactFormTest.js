@@ -1,5 +1,7 @@
-
 context('Testing of Contact form fields', () => {
+    const errorColor = "rgb(220, 53, 69)";
+    const validColor = "rgb(40, 167, 69)";
+
     beforeEach(() => {
         cy.visit('https://getbootstrap.com/docs/4.4/examples/checkout')
     })
@@ -9,11 +11,9 @@ context('Testing of Contact form fields', () => {
             .click();
     }
 
-    describe('First name testing', () => {
+    describe('First name field tests', () => {
         const firsNameElementId = "#firstName";
         const errorMessageNameIsRequired = "Valid first name is required";
-        const errorColor = "rgb(220, 53, 69)";
-        const validColor = "rgb(40, 167, 69)";
 
         // negative testing
         it('It should be displayed error message when value is not provided', () => {
@@ -80,8 +80,7 @@ context('Testing of Contact form fields', () => {
             cy.get(firsNameElementId)
                 .type('Mary')
 
-            cy.contains('Continue to checkout')
-                .click();
+            clickContinueBtn(cy);
 
             cy.get(firsNameElementId)
                 .should('have.css', 'border-color', validColor)
@@ -90,4 +89,140 @@ context('Testing of Contact form fields', () => {
 
     })
 
+    describe('Email field tests', () => {
+        const emailElementId = "#email";
+        const errorMessageEmailIsInvalid = "Please enter a valid email address for shipping updates";
+
+        const checkFieldIsValid = (cy) => cy.get(emailElementId).should('have.css', 'border-color', validColor);
+        const checkErrorMessageIsVisible = (cy) => cy.contains(errorMessageEmailIsInvalid).should('be.visible');
+
+        it('It should be displayed error message when value has no @ and domain', () => {
+
+            cy.get(emailElementId)
+                .type('a')
+
+            clickContinueBtn(cy);
+
+            checkErrorMessageIsVisible(cy);
+
+        });
+
+        it('Input field should have red border when invalid email is provided', () => {
+
+            cy.get(emailElementId)
+                .type('a')
+
+            clickContinueBtn(cy);
+
+            cy.get(emailElementId)
+                .should('have.css', 'border-color', errorColor)
+
+        });
+
+        it('It should be displayed error message when value has no user name', () => {
+
+            cy.get(emailElementId)
+                .type('@gmail.com')
+
+            clickContinueBtn(cy);
+
+            checkErrorMessageIsVisible(cy);
+
+        });
+
+        it('It should be displayed error message when encoded html within email is provided', () => {
+
+            cy.get(emailElementId)
+                .type('Mary Black <maryblack@gmail.com>')
+
+            clickContinueBtn(cy);
+
+            checkErrorMessageIsVisible(cy);
+
+        });
+
+        it('It should be displayed error message when @ character provided twice', () => {
+
+            cy.get(emailElementId)
+                .type('mary@black@gmail.com')
+
+            clickContinueBtn(cy);
+
+            checkErrorMessageIsVisible(cy);
+
+        });
+
+        it('It should be displayed error message when multiple dots in the domain is provided', () => {
+
+            cy.get(emailElementId)
+                .type('black@gmail..com')
+
+            clickContinueBtn(cy);
+
+            checkErrorMessageIsVisible(cy);
+
+        });
+
+
+        // positive testing
+        it('Input field should contain provided valid email', () => {
+
+            cy.get(emailElementId)
+                .type('some@gmail.com')
+
+            clickContinueBtn(cy);
+
+            checkFieldIsValid(cy);
+
+        });
+
+
+        it('Input field should have green border when valid email is provided', () => {
+
+            cy.get(emailElementId)
+                .type('some@gmail.com')
+
+            clickContinueBtn(cy);
+
+            checkFieldIsValid(cy);
+
+        });
+
+        it('Input field should be valid when email username contains a dot ', () => {
+
+            cy.get(emailElementId)
+                .type('some.some@gmail.com')
+
+            clickContinueBtn(cy);
+
+            checkFieldIsValid(cy);
+
+        });
+
+        it('Input field should be valid when email domain contains a dot with subdomain ', () => {
+
+            cy.get(emailElementId)
+                .type('some.some@subdomain.gmail.com')
+
+            clickContinueBtn(cy);
+
+            checkFieldIsValid(cy);
+
+        });
+
+        it('Input field should be valid when email contains dash in username part', () => {
+
+            cy.get(emailElementId)
+                .type('some-some@subdomain.gmail.com')
+
+            clickContinueBtn(cy);
+
+            checkFieldIsValid(cy);
+
+        });
+
+
+    })
 })
+
+
