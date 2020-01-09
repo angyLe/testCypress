@@ -87,6 +87,23 @@ context('Testing of Contact form fields', () => {
 
         });
 
+
+        /* 
+            Strings should not contain blank spaces at the start or at the end after it was added. 
+            It is problematic to sort such strings. 
+            Truncation of the string could be done on the server side.
+            After string is added and if it is displayed somewhere on the page, 
+            it could be performed a test to check presence of leading and trailing whitespaces.
+        */
+        it.skip('Input field text should be truncated', () => {
+
+            cy.get(firsNameElementId)
+                .type(' Mary')
+
+            // test this somehow
+           
+        });
+
     })
 
     describe('Email field tests', () => {
@@ -224,5 +241,13 @@ context('Testing of Contact form fields', () => {
 
     })
 })
+
+
+context('Testing of Contact ', () => {
+    const errorColor = "rgb(220, 53, 69)";
+    const validColor = "rgb(40, 167, 69)";
+
+})
+
 
 
